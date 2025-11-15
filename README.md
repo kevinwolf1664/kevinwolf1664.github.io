@@ -1,5 +1,151 @@
-theme jekyll-theme-minimal
-title kevins page
-description tiktok live bildschirm 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Bestellungen – Wolf Solution</title>
 
-# kevinwolf1664.github.io
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    /* HINTERGRUND MIT URL */
+    body {
+      background: url("file:///C:/Users/HP/OneDrive%20-%20Wolf-Solution/Desktop/Elektronische%20Ger%C3%A4te%20im%20Neonlicht.png") no-repeat center center fixed;
+      background-size: cover;
+
+      color: #ffc508;
+      font-family: 'Arial Black', sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* LOGO MIT URL */
+    #logo {
+      width: 500px;
+      margin-top: -100px;
+      filter: drop-shadow(0 0 10px #ffffff);
+      animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      from {
+        filter: drop-shadow(0 0 10px #ffffff);
+      }
+      to {
+        filter: drop-shadow(0 0 25px #ffffff);
+      }
+    }
+
+    /* TITEL */
+h1 {
+  font-size: 30px;
+  margin-top: -200px; /* <-- Position nach unten */
+  margin-bottom: 20px;
+  color: #ffc508;
+  text-shadow:
+    0 0 8px #ffffff,
+    0 0 200px #ffffff;
+}
+
+
+    .order {
+      font-size: 32px;
+      margin: -120px 0;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    #orders {
+  margin-top: -100px;  /* Wert ändern für mehr/weniger Abstand */
+}
+
+    }
+
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .flash {
+      animation: flashEffect 1s ease-in-out;
+    }
+
+    @keyframes flashEffect {
+      0%, 100% { color: #ffffff; text-shadow: 0 0 10px #d6d6d6; }
+      50% { color: #ffffff; text-shadow: 0 0 25px #ffffff; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- LOGO -->
+  <img id="logo" src="file:///C:/Users/HP/Downloads/ChatGPT_Image_14._Nov._2025__14_27_51-removebg-preview%20(1).png" alt="Wolf Solution Logo">
+
+  <h1>🛍️ Neue Bestellungen</h1>
+  <div id="orders">Lade...</div>
+
+  <!-- SOUND -->
+  <audio id="ding" src="cash.mp3" preload="auto"></audio>
+
+  <script>
+    const shopUrl = "https://wolf-solution.myshopify.com/admin/api/2024-10/orders.json";
+    const token = "HIER_DEIN_API_TOKEN_EINFÜGEN";
+    let letzteBestellung = "";
+
+    async function ladeBestellungen() {
+      try {
+        const response = await fetch(shopUrl, {
+          headers: { "X-Shopify-Access-Token": token }
+        });
+
+        const data = await response.json();
+        const orders = data.orders;
+        if (!orders) return;
+
+        const container = document.getElementById("orders");
+        container.innerHTML = "";
+
+        orders.slice(0, 5).forEach((o) => {
+          const name = o.customer?.first_name || "Kunde";
+          const produkt = o.line_items[0]?.title || "Produkt";
+          const preis = o.total_price ? o.total_price + " CHF" : "";
+          const zeit = new Date(o.created_at).toLocaleString("de-DE");
+
+          const div = document.createElement("div");
+          div.classList.add("order");
+          div.innerHTML = `
+            🔔 <strong>${name}</strong> hat <strong>${produkt}</strong> bestellt<br>
+            💰 ${preis} | 🕒 ${zeit}
+          `;
+          container.appendChild(div);
+        });
+
+        const neueste = orders[0]?.id;
+        if (neueste && neueste !== letzteBestellung) {
+          letzteBestellung = neueste;
+          blinkeUndKlinge();
+        }
+
+      } catch (err) {
+        document.getElementById("orders").innerText = "Fehler beim Laden der Bestellungen.";
+        console.error(err);
+      }
+    }
+
+    function blinkeUndKlinge() {
+      const ding = document.getElementById("ding");
+      ding.play();
+      document.querySelector("h1").classList.add("flash");
+      setTimeout(() => document.querySelector("h1").classList.remove("flash"), 1000);
+    }
+
+    ladeBestellungen();
+    setInterval(ladeBestellungen, 30000);
+  </script>
+
+</body>
+</html>
+
