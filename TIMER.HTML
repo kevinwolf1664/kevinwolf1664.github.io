@@ -35,24 +35,25 @@
     }
 
     /* ===== LOGO ===== */
+    .logo{
+      position:absolute;
+      top:3vh;
+      left:50%;
+      transform:translateX(-50%);
+      max-width:60vw;
+      max-height:14vh;
+      object-fit:contain;
+      filter: drop-shadow(0 0 22px rgba(212,175,55,0.35));
+    }
+
     .time{
       font-variant-numeric: tabular-nums;
       font-weight: 900;
       letter-spacing: .06em;
       font-size: min(22vw, 28vh);
       line-height: 1;
-    text-shadow: 0 0 30px rgba(212,175,55,0.22);
-  
-.logo{
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 70vw;
-  max-height: 14vh;
-  object-fit: contain;
-  z-index: 10
-}
+      text-shadow: 0 0 30px rgba(212,175,55,0.22);
+    }
 
     .pickerRow{
       display:flex;
@@ -267,10 +268,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
