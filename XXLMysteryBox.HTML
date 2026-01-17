@@ -9,10 +9,11 @@
       height: 100%;
       margin: 0;
       font-family: system-ui, Arial, sans-serif;
-      background: #000000;
+      background: #0b1020;
       color: white;
       display: grid;
       place-items: center;
+      overflow: hidden;
     }
 
     .card {
@@ -23,6 +24,7 @@
       border: 1px solid rgba(255,255,255,0.12);
       text-align: center;
       box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+      position: relative;
     }
 
     .title {
@@ -43,17 +45,68 @@
       box-shadow: 0 14px 40px rgba(0,0,0,0.55);
       background: rgba(255,255,255,0.03);
     }
+
+    .btnRow{
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .smallHint{
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: .7;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="page">
     <h1 class="title">XXL MYSTERY BOX</h1>
     <img src="box.png" alt="Mystery Box" />
+
+    <div class="btnRow">
+      <button class="btn" id="fsBtn">Fullscreen</button>
+    </div>
+
+    <div class="smallHint">Tipp: ESC zum verlassen</div>
   </div>
+
+  <script>
+    const fsBtn = document.getElementById("fsBtn");
+    const page = document.getElementById("page");
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await page.requestFullscreen();
+          fsBtn.textContent = "Fullscreen aus";
+        } else {
+          await document.exitFullscreen();
+          fsBtn.textContent = "Fullscreen";
+        }
+      } catch (e) {
+        alert("Fullscreen geht nicht im Browser. Versuch es nochmal oder nutz Chrome.");
+      }
+    }
+
+    fsBtn.addEventListener("click", toggleFullscreen);
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) fsBtn.textContent = "Fullscreen";
+    });
+  </script>
 </body>
 </html>
-
-
-
-
-
